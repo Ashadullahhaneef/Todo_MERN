@@ -1,19 +1,34 @@
-const token = await jwt.sign(
-  {
-    id: user._id,
-    email: user.email,
-  },
-  process.env.JWT_SECRET,
-  { expiresIn: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) },
-);
-user.token = token;
-user.password = undefined;
-localStorage.setItem("token", token);
-const options = {
-  expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
-  httpOnly: true,
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+dotenv.config();
+
+exports.auth = async (req, res, next) => {
+  try {
+    const token =
+      req.body.token ||
+      req.cookies.token ||
+      req.header("Authorization")?.replace("Bearer ", "");
+    if (!token) {
+      return res.status(401).json({
+        success: false,
+        message: "Token Missing",
+      });
+    }
+    try {
+      const decode = await jwt.verify(token, process.env.JWT_SECRET);
+      console.log("decoded token:-", decode);
+      req.user = decode;
+    } catch (error) {
+      return res.status(401).json({
+        stauts: false,
+        message: "Invalid Token means Token didnot decoded",
+      });
+    }
+    next();
+  } catch (error) {
+    return res.status(401).json({
+      success: false,
+      message: "Some thing went wrong when validating the Token",
+    });
+  }
 };
-res.cookie("token", token, options).status(200).json({
-  success: true,
-  message: "User Login Successfully",
-});
