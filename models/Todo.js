@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const todSchema = new mongoose.Schema(
+const todoSchema = new mongoose.Schema(
   {
     user: {
       type: mongoose.Schema.Type.ObjectId,

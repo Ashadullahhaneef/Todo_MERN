@@ -6,11 +6,11 @@ const {
   updateTodo,
   deleteTodo,
   getAllTodos,
-} = require("../controllers/Auth");
+} = require("../controllers/Todo");
 
 router.post("/createTodo", auth, createTodo);
 router.put("/updateTodo", auth, updateTodo);
 router.delete("/deleteTodo", auth, deleteTodo);
 router.get("/getAllTodos", auth, getAllTodos);
 
-return router;
+module.exports = router;

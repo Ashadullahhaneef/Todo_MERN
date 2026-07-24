@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const userSchema = new mongoose.Schema(
   {
     firstName: {
-      type: Sting,
+      type: String,
       required: true,
       trim: true,
     },
@@ -33,4 +33,4 @@ const userSchema = new mongoose.Schema(
   },
 );
 
-module.exports = mongoose.model("user",userSchema);
+module.exports = mongoose.model("user", userSchema);

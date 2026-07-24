@@ -30,6 +30,7 @@ const signup = async (req, res) => {
       firstName,
       lastName,
       password: hashedPassword,
+      confirmPassword: hashedPassword,
     });
     return res.status(200).json({
       succes: true,
@@ -54,9 +55,9 @@ const login = async (req, res) => {
       });
     }
 
-    const user = await User.findOne({ email });
+    const user = await User.findOne({ email:email });
     if (!user) {
-      return res.status(40).json({
+      return res.status(401).json({
         success: false,
         message: "User not registed, please signup first",
       });
@@ -69,10 +70,11 @@ const login = async (req, res) => {
           email: user.email,
         },
         process.env.JWT_SECRET,
-        { expiresIn: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000) },
+        { expiresIn: "3d" },
       );
       user.token = token;
       user.password = undefined;
+      user.confirmPassword = undefined;
       const options = {
         expires: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000),
         httpOnly: true,

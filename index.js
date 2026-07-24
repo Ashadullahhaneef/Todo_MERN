@@ -8,7 +8,7 @@ const cors = require("cors");
 const authRouter = require("./routers/Auth");
 const todoRouter = require("./routers/Todo");
 
-PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 4000;
 
 //database connection
 dbConnect();
