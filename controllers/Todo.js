@@ -1,4 +1,5 @@
 const { json } = require("express");
+const Todo = require("../models/Todo")
 
 //create todo
 const createTodo = async (req, res) => {
@@ -10,19 +11,23 @@ const createTodo = async (req, res) => {
         message: "Please Filled All Required Area",
       });
     }
-    const user = req.user.id;
-    if (!user) {
+    const userId = req.user.id;
+    console.log(`user Id is => ${userId}`);
+    if (!userId) {
       return res.status(400).json({
         status: false,
-        message: "Please Login Again",
+        message: "userId is not present in making time of createTodo",
       });
     }
-    const newTodo = await Todo.create({ user: user.id, title, description });
+    const newTodo = await Todo.create({ user: userId, title, description });
+    console.log(`new todo => ${newTodo}`)
     return res.status(200).json({
       success: true,
+      data:newTodo,
       message: "New Todo is Created Successfully",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Could Not Create Todo, Please Try Again",
@@ -35,6 +40,7 @@ const updateTodo = async (req, res) => {
     const { todoId } = req.body;
     const userId = req.user.id;
     const todo = await Todo.findById(todoId);
+    // console.log(`oldTodo = ${todo}`)
     if (!todo) {
       return res.status(404).json({
         success: false,
@@ -50,6 +56,7 @@ const updateTodo = async (req, res) => {
     const updatedTodo = await Todo.findByIdAndUpdate(todoId, req.body, {
       new: true,
     });
+    console.log(`updated todo => ${updatedTodo}`)
     return res.status(200).json({
       success: true,
       message: "Todo Is Updated Successfully",
@@ -66,8 +73,9 @@ const updateTodo = async (req, res) => {
 const deleteTodo = async (req, res) => {
   try {
     const { todoId } = req.body;
-    const userId = req.body.id;
 
+    const userId = req.user.id;
+    
     const todo = await Todo.findById(todoId);
     if (!todo) {
       return res.status(404).json({
@@ -75,18 +83,21 @@ const deleteTodo = async (req, res) => {
         message: "Todo Not Found",
       });
     }
+    // console.log(`fetch todo => ${todo}`)
     if (todo.user.toString() !== userId) {
       return res.status(401).json({
         success: false,
         message: "Not Authorized",
       });
     }
+    // console.log("todo user match after that todo deleted")
     await Todo.findByIdAndDelete(todoId);
     return res.status(200).json({
       success: true,
       message: "Todo Deleted Successfully",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Couldnot Delete Todo, Please Try Again",
@@ -96,14 +107,16 @@ const deleteTodo = async (req, res) => {
 
 const getAllTodos = async (req, res) => {
   try {
-    const userId = req.body.id;
+    const userId = req.user.id;
     const todos = await Todo.find({ user: userId }).sort({ createdAt: -1 });
+    // console.log(`All Todos => ${todos}`)
     return res.status(200).json({
       success: true,
       data: todos,
       message: "Get All Todos Successfully",
     });
   } catch (error) {
+    console.log(error);
     return res.status(500).json({
       success: false,
       message: "Could Not Fetch Todos, Please Try Again",

@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const todoSchema = new mongoose.Schema(
   {
     user: {
-      type: mongoose.Schema.Type.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "user",
       required: true,
     },
@@ -19,7 +19,7 @@ const todoSchema = new mongoose.Schema(
     },
     completed: {
       type: Boolean,
-      required: true,
+      // required: true,
       default: false,
     },
   },

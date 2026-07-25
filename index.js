@@ -24,7 +24,7 @@ app.use(
 
 //routes
 app.use("/api/v1/auth", authRouter);
-app.use("/api/v1/todoRouter", todoRouter);
+app.use("/api/v1/todo", todoRouter);
 
 app.get("/", (req, res) => {
   return res.json({
