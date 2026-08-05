@@ -5,12 +5,16 @@ const jwt = require("jsonwebtoken");
 const signup = async (req, res) => {
   try {
     const { firstName, lastName, email, password, confirmPassword } = req.body;
+    console.log("data body se nikal liye hai")
+    // console.log(`firstName = ${firstName}, lastName = ${lastName},email = ${email},password = ${password},confirmPassword = ${confirmPassword}`);
     if (!firstName || !lastName || !email || !password || !confirmPassword) {
+      console.log("yahan validation ho rha hai")
       return res.status(403).json({
         success: false,
         message: "Please fill all required filled",
       });
     }
+    console.log("comparision password between password or confirm-password")
     if (password != confirmPassword) {
       return res.status(400).json({
         success: false,

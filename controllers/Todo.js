@@ -59,6 +59,7 @@ const updateTodo = async (req, res) => {
     console.log(`updated todo => ${updatedTodo}`)
     return res.status(200).json({
       success: true,
+      data:updatedTodo,
       message: "Todo Is Updated Successfully",
     });
   } catch (error) {
